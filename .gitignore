@@ -1,0 +1,76 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+# EXCEPTION: RN web-export copies bundled fonts/assets under a node_modules path
+# inside public/rn — they must be tracked (reboot persistence of the preview).
+!public/rn/assets/node_modules/
+!public/rn/assets/node_modules/**
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+# scratch files at repo root ONLY — must never match finacc-mobile source (e.g. src/services/local-store.ts)
+/local-*
+.claude
+.z-ai-config
+*.log
+dev.log
+dev.out.log
+test
+prompt
+
+server.log
+# Skills directory
+/skills/
+
+# finacc-mobile (RN/Expo) — rebuildable artifacts (source + public/rn export ARE tracked)
+finacc-mobile/node_modules/
+finacc-mobile/dist/
+finacc-mobile/.expo/
+finacc-mobile/.web/
+finacc-mobile/web-report/
+
+# agent tooling scratch (not project artifacts)
+/tool-results/
+
+# Android build toolchain + native projects (huge, generated — Tailwind4 must not scan them)
+android-sdk/
+static-shell/
+finacc-mobile/android/
+build-gradle.log
+static-server.log

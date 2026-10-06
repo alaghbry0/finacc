@@ -1,0 +1,56 @@
+{
+  "skill_name": "sandbox-multi-stack",
+  "notes": "Test prompts for future iterations. eval-0 was executed LIVE on 2026-09-27 (see worklog.md Task SKILL-1): a general-purpose subagent restored PostgreSQL from a wiped /home/z/pg using only this skill, found 3 skill bugs (keeper.sh cwd, silent bootstrap failure, missing mid-session restore path), fixed them, and verified end-to-end through the public gateway.",
+  "evals": [
+    {
+      "id": 0,
+      "name": "postgres-restore-after-reboot",
+      "prompt": "PostgreSQL disappeared after the sandbox reboot (the whole /home/z/pg folder is gone). Restore it and make it auto-revive after future reboots. The next-demo service (second Next.js app on :3005, public path /demo2) reads PostgreSQL data — make sure it works end-to-end through the public gateway.",
+      "expected_output": "Postgres 16 on 127.0.0.1:5432, pulse_demo.visits table, boot-durable mini-services/pg-keeper/, /demo2 shows live growing data through the public URL.",
+      "status": "PASSED (live, 2026-09-27) — 3 skill bugs found & fixed during run"
+    },
+    {
+      "id": 1,
+      "name": "new-python-service",
+      "prompt": "Add a small Python service to this sandbox that serves a JSON API on a free port (check what's taken first) and a status page I can open from my browser. It should survive you finishing and come back if the sandbox reboots.",
+      "expected_output": "mini-services/{name}/ with package.json (UV_PROJECT_ENVIRONMENT dev script) + pyproject.toml + app.py (assets inline), adopted via /ops/adopt, verified via ?XTransformPort={port}, auto-boots next reboot.",
+      "assertions": [
+        "page assets are inline (no external script/link tags)",
+        "service appears in ADOPTABLE and was adopted via POST /ops/adopt",
+        "curl through gateway :81 with XTransformPort returns 200",
+        "package.json dev script sets UV_PROJECT_ENVIRONMENT under /home/z/venvs/"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "third-nextjs-app",
+      "prompt": "Run a third Next.js app in this sandbox on another port and make it usable from my browser at /demo3 with working React interactivity.",
+      "expected_output": "mini-services/{name}/ with next dev -p {free port}, basePath=/demo3, turbopack.root=process.cwd(), versions pinned next 16.1.3/react 19.2.3, reverse-proxy route src/app/demo3/[[...rest]]/route.ts in main app, hydration verified by clicking something in a real browser.",
+      "assertions": [
+        "next.config.ts contains BOTH basePath and turbopack.root",
+        "package.json pins exact versions (not ^) for next/react/react-dom",
+        "src/app/demo3/[[...rest]]/route.ts proxy exists and forwards all methods",
+        "agent-browser click on an interactive element produces expected DOM change",
+        "no hydration errors in browser console"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "react-native-static-export-preview",
+      "prompt": "I want a small React Native (Expo) app built here in the sandbox: one Arabic RTL dark screen with a button that shows a toast. I also want to actually see and click it in my browser preview, and I want to know if you can give me an APK from here.",
+      "expected_output": "Manual Expo scaffold (no create-expo-app — it hangs), bun install, npx expo export --platform web, a repeatable build script applying the 3 traps' fixes (asset path rewrite to /rn/ prefix, history.replaceState injection before the _expo bundle script, font/_expo symlinks in public/ created via bun), bundle copied to public/rn/, live preview verified with agent-browser interactivity, and a clear handoff note that APK (EAS Build / Expo Go) runs on the user's machine because EAS needs an interactive account login and the emulator needs KVM.",
+      "assertions": [
+        "create-expo-app was NOT used; project scaffolded manually (package.json + app.json + tsconfig + app/)",
+        "app.json sets expo.web.output = static",
+        "export ran via npx expo export --platform web and produced dist/",
+        "emitted HTML root-absolute asset URLs rewritten to the mount prefix (e.g. /rn/)",
+        "index.html contains a history.replaceState injection before the first _expo bundle <script>",
+        "public/_expo and public/assets symlinks created via bun (not ln -s)",
+        "curl http://127.0.0.1:3000/rn/index.html returns the app HTML",
+        "agent-browser interaction on the page produces the expected UI change (toast appears)",
+        "agent did NOT try to keep a long-running expo start / Metro dev server alive",
+        "final answer states the APK must be built on the user's machine (EAS/Expo Go)"
+      ]
+    }
+  ]
+}

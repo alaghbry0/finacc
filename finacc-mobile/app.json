@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "المُحاسِب الشخصي",
+    "slug": "finacc-mobile",
+    "newArchEnabled": true,
+    "userInterfaceStyle": "dark",
+    "icon": "./assets/icon.png",
+    "android": {
+      "package": "com.finacc.personal",
+      "softwareKeyboardLayoutMode": "pan",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#061967"
+      }
+    },
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#061967"
+    },
+    "web": { "bundler": "metro", "output": "static" },
+    "plugins": ["expo-router"],
+    "experiments": { "tsconfigPaths": true },
+    "scheme": "finacc"
+  }
+}

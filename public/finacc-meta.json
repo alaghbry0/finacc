@@ -1,0 +1,10 @@
+{
+  "available": true,
+  "version": "1.0.0",
+  "sizeMb": 46,
+  "builtAt": "2026-10-06T21:20:33Z",
+  "file": "/finacc-v1.0.0.apk",
+  "package": "com.finacc.personal",
+  "android": "7.0+",
+  "abis": ["arm64-v8a", "armeabi-v7a"]
+}
